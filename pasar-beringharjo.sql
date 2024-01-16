@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 13, 2024 at 08:30 AM
+-- Generation Time: Jan 16, 2024 at 10:15 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -89,13 +89,6 @@ CREATE TABLE `img_produk` (
   `img` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `img_produk`
---
-
-INSERT INTO `img_produk` (`id`, `id_produk`, `img`) VALUES
-(18, 309484, '1705027153_a12ca65b898a3e2fdcb2.png');
-
 -- --------------------------------------------------------
 
 --
@@ -174,13 +167,6 @@ CREATE TABLE `produk` (
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `produk`
---
-
-INSERT INTO `produk` (`id`, `id_toko`, `slug`, `nama`, `jenis`, `harga`, `stok`, `description`) VALUES
-(309484, '02af353e-2beb-4553-9d89-f313749c1b3b', 'agra-wibawa-merah', 'Agra Wibawa Merah', 'baju', 200000, 'tersedia', NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -198,6 +184,7 @@ CREATE TABLE `toko` (
   `img_profile` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `img_cover` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `lantai` int DEFAULT NULL,
+  `id_lokasi` int NOT NULL,
   `password` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `verified` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -206,17 +193,17 @@ CREATE TABLE `toko` (
 -- Dumping data for table `toko`
 --
 
-INSERT INTO `toko` (`id_toko`, `name`, `email`, `address`, `coordinate`, `no_telp`, `slug`, `img_profile`, `img_cover`, `lantai`, `password`, `verified`) VALUES
-('02af353e-2beb-4553-9d89-f313749c1b3b', 'Toko Agus', 'aguskkhaerjobs@gmail.com', '62341 Jeanette Mountains', '{\"lat\":-7.798661,\"lng\":110.365318}', '08567773242', 'toko-agus', NULL, NULL, 1, '$2y$10$rWWBK0H9c9wZs/L58C7PpuER0UUM85EokTP0MVYj3KhsHkBDeCnK6', 0),
-('12c50737-4db3-41a6-9d25-83a70cfebf68', 'asndnasdnl', 'asdal@gmail.com', NULL, '{\"lat\" : -7.798603, \"lng\" : 110.366104}', NULL, 'asndnasdnl', NULL, NULL, 1, '$2y$10$I.McRBlbrr8pAoMK8elKp.s0Z3DJTiGFJ53Cl6nVrigabLXJJihkG', 0),
-('37691850-b1c0-11ee-ab68-c85b760e9f8a', 'asdasdasdasd', 'asdasdasd@yahoo.com', 'asdasd', '{\"lat\" : -7.798871, \"lng\" : 110.365958}', NULL, 'asdasdasdasd', NULL, NULL, 1, '', 0),
-('37694036-b1c0-11ee-ab68-c85b760e9f8a', 'asdadsasd33', 'asdasdasd@outlook.com', NULL, '{\"lat\" : -7.798891, \"lng\" : 110.366613}', NULL, 'asdadsasd33', NULL, NULL, 1, '', 0),
-('54c14387-0f7f-47cf-98ff-dce8d6464973', 'asndnasdnl', 'hohohohoo@gmail.com', NULL, '{\"lat\" :-7.798603, \"lng\" : 110.366104}', NULL, 'asndnasdnl', NULL, NULL, 1, '$2y$10$y.comtX4KrBDVBvWr6EchOgXZt2zIs3X7wGKClt89xcnKhw81ch8.', 0),
-('ca328ea8-b1c0-11ee-ab68-c85b760e9f8a', 'asdasdasd2', 'asdaoopopop@gmail.com', NULL, '{\"lat\" : -7.798733, \"lng\" : 110.366685}', NULL, 'asdasdasd2', NULL, NULL, NULL, '', 0),
-('ca32ac66-b1c0-11ee-ab68-c85b760e9f8a', '990909asd', '990909asd@gmail.com', 'asdaasdasdsfdgdhrtevcxc', '{\"lat\" : -7.799018, \"lng\" : 110.366528}', NULL, '990909asd', NULL, NULL, NULL, '', 0),
-('ca32d1af-b1c0-11ee-ab68-c85b760e9f8a', 'googg323', 'ggggsad@gmail.com', NULL, '{\"lat\" : -7.798898, \"lng\" : 110.367220}', NULL, 'googg323', NULL, NULL, NULL, '', 0),
-('ca32fb75-b1c0-11ee-ab68-c85b760e9f8a', 'wqerwtertttr', 'qwert!@gmail.com', NULL, '{\"lat\" : -7.798794, \"lng\" : 110.367638}', NULL, 'wqerwtertttr', NULL, NULL, NULL, '', 0),
-('ca3313cd-b1c0-11ee-ab68-c85b760e9f8a', 'sdfsgdfgdfg', 'sdfsdfs@gmail.com', NULL, '{\"lat\" : -7.798782, \"lng\" : 110.367986}', NULL, 'sdfsgdfgdfg', NULL, NULL, NULL, '', 0);
+INSERT INTO `toko` (`id_toko`, `name`, `email`, `address`, `coordinate`, `no_telp`, `slug`, `img_profile`, `img_cover`, `lantai`, `id_lokasi`, `password`, `verified`) VALUES
+('12c50737-4db3-41a6-9d25-83a70cfebf68', 'asndnasdnl', 'asdal@gmail.com', NULL, '{\"lat\" : -7.798603, \"lng\" : 110.366104}', NULL, 'asndnasdnl', NULL, NULL, 1, 2, '$2y$10$I.McRBlbrr8pAoMK8elKp.s0Z3DJTiGFJ53Cl6nVrigabLXJJihkG', 0),
+('37691850-b1c0-11ee-ab68-c85b760e9f8a', 'asdasdasdasd', 'asdasdasd@yahoo.com', 'asdasd', '{\"lat\" : -7.798871, \"lng\" : 110.365958}', NULL, 'asdasdasdasd', NULL, NULL, 1, 3, '', 0),
+('37694036-b1c0-11ee-ab68-c85b760e9f8a', 'asdadsasd33', 'asdasdasd@outlook.com', NULL, '{\"lat\" : -7.798891, \"lng\" : 110.366613}', NULL, 'asdadsasd33', NULL, NULL, 1, 1, '', 0),
+('54c14387-0f7f-47cf-98ff-dce8d6464973', 'asndnasdnl', 'hohohohoo@gmail.com', NULL, '{\"lat\" :-7.798603, \"lng\" : 110.366104}', NULL, 'asndnasdnl', NULL, NULL, 1, 2, '$2y$10$y.comtX4KrBDVBvWr6EchOgXZt2zIs3X7wGKClt89xcnKhw81ch8.', 0),
+('7e219b94-0bad-4e0b-acf7-195afeee954c', 'Batik Wadimorrr', 'aguskkhaer@gmail.com', NULL, NULL, NULL, 'batik-wadimorrr', NULL, NULL, NULL, 1, '$2y$10$Ucs/cHWY4k3ioBxpZQWUnO6BSJuGRIsvk7kWHl0EGgk9ZOQL8Zf7m', 0),
+('ca328ea8-b1c0-11ee-ab68-c85b760e9f8a', 'asdasdasd2', 'asdaoopopop@gmail.com', NULL, '{\"lat\" : -7.798733, \"lng\" : 110.366685}', NULL, 'asdasdasd2', NULL, NULL, NULL, 2, '', 0),
+('ca32ac66-b1c0-11ee-ab68-c85b760e9f8a', '990909asd', '990909asd@gmail.com', 'asdaasdasdsfdgdhrtevcxc', '{\"lat\" : -7.799018, \"lng\" : 110.366528}', NULL, '990909asd', NULL, NULL, NULL, 2, '', 0),
+('ca32d1af-b1c0-11ee-ab68-c85b760e9f8a', 'googg323', 'ggggsad@gmail.com', NULL, '{\"lat\" : -7.798898, \"lng\" : 110.367220}', NULL, 'googg323', NULL, NULL, NULL, 3, '', 0),
+('ca32fb75-b1c0-11ee-ab68-c85b760e9f8a', 'wqerwtertttr', 'qwert!@gmail.com', NULL, '{\"lat\" : -7.798794, \"lng\" : 110.367638}', NULL, 'wqerwtertttr', NULL, NULL, NULL, 3, '', 0),
+('ca3313cd-b1c0-11ee-ab68-c85b760e9f8a', 'sdfsgdfgdfg', 'sdfsdfs@gmail.com', NULL, '{\"lat\" : -7.798782, \"lng\" : 110.367986}', NULL, 'sdfsgdfgdfg', NULL, NULL, NULL, 3, '', 0);
 
 -- --------------------------------------------------------
 
@@ -236,7 +223,6 @@ CREATE TABLE `toko_email_confirm` (
 --
 
 INSERT INTO `toko_email_confirm` (`id`, `id_toko`, `code`, `expired_at`) VALUES
-(14, '02af353e-2beb-4553-9d89-f313749c1b3b', '616bbaf1-e9e8-45a7-bdf8-a0e903588f81', '2024-01-11 22:28:38'),
 (15, '12c50737-4db3-41a6-9d25-83a70cfebf68', '4772c016-2405-42b4-ab52-6dd61a961b4d', '2024-01-13 10:13:54'),
 (16, '54c14387-0f7f-47cf-98ff-dce8d6464973', 'a87db9aa-0c87-4eae-9b8c-679d26611e01', '2024-01-13 10:14:13');
 
@@ -334,7 +320,8 @@ ALTER TABLE `produk`
 --
 ALTER TABLE `toko`
   ADD PRIMARY KEY (`id_toko`),
-  ADD UNIQUE KEY `email` (`email`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `id_lokasi` (`id_lokasi`);
 
 --
 -- Indexes for table `toko_email_confirm`
@@ -369,7 +356,7 @@ ALTER TABLE `gallery`
 -- AUTO_INCREMENT for table `img_produk`
 --
 ALTER TABLE `img_produk`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `kritik`
@@ -387,13 +374,13 @@ ALTER TABLE `lokasi_pasar`
 -- AUTO_INCREMENT for table `produk`
 --
 ALTER TABLE `produk`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309485;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=309486;
 
 --
 -- AUTO_INCREMENT for table `toko_email_confirm`
 --
 ALTER TABLE `toko_email_confirm`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables
@@ -422,6 +409,12 @@ ALTER TABLE `post`
 --
 ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_toko`) REFERENCES `toko` (`id_toko`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `toko`
+--
+ALTER TABLE `toko`
+  ADD CONSTRAINT `toko_ibfk_1` FOREIGN KEY (`id_lokasi`) REFERENCES `lokasi_pasar` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `toko_email_confirm`

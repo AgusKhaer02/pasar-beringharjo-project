@@ -34,7 +34,7 @@ Toko Saya
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div class="d-flex justify-content-end text-center py-1">
               <div>
-                <p class="mb-1 h2">253</p>
+                <p class="mb-1 h2"><?= $produkCount  ?? "Belum Ada" ?></p>
                 <p class="small text-muted mb-0">Produk</p>
               </div>
             </div>
@@ -43,33 +43,49 @@ Toko Saya
 
             <div class="d-flex justify-content-between align-items-center mb-4">
               <p class="lead fw-normal mb-0">Produk Anda</p>
-              <p class="mb-0"><a href="#!" class="text-muted">Tampilkan Semua</a></p>
+              <p class="mb-0"><a href="<?= base_url('toko/home?all=true')?>" class="text-muted">Tampilkan Semua</a></p>
             </div>
 
             <a href="<?= base_url('toko/product/add-product') ?>" class="btn btn-primary mb-3">Tambahkan Produk Anda</a>
 
             <div class="row g-3">
-              <?php foreach ($produk as $item) : ?>
-                <div class="col-md-3 mb-2">
-                  <a href="<?= base_url('toko/product/' . $item['slug']) ?>">
-                    <img src="<?= base_url('images/toko/produk/' . $item['img_produk']) ?>" alt="image 1" class="w-100 rounded-3">
-                    <h3><?= $item['nama']; ?></h3>
-                    <h3>Rp <?= $item['harga']; ?></h3>
-                    <?php if ($item['stok'] == "tersedia") : ?>
-                      <h3>
-                        <div class="badge badge-success">Tersedia</div>
-                      </h3>
-                    <?php elseif ($item['stok'] == "habis") : ?>
-                      <h3>
-                        <div class="badge badge-secondary">Habis</div>
-                      </h3>
-                    <?php endif ?>
-                  </a>
-                </div>
-              <?php endforeach ?>
+              <?php if ($produkCount > 0) : ?>
+                <?php foreach ($produk as $item) : ?>
+                  <div class="col-md-3 mb-2">
+                    <a href="<?= base_url('toko/product/' . $item['slug']) ?>">
+                      <img src="<?= base_url('images/toko/produk/' . $item['img_produk']) ?>" alt="image 1" class="w-100 rounded-3">
+                      <h3><?= $item['nama']; ?></h3>
+                      <h3>Rp <?= $item['harga']; ?></h3>
+                      <?php if ($item['stok'] == "tersedia") : ?>
+                        <h3>
+                          <div class="badge badge-success">Tersedia</div>
+                        </h3>
+                      <?php elseif ($item['stok'] == "habis") : ?>
+                        <h3>
+                          <div class="badge badge-secondary">Habis</div>
+                        </h3>
+                      <?php endif ?>
+                    </a>
+                  </div>
+                <?php endforeach ?>
+
+                
+              <?php else : ?>
+                <center>
+
+                  <div class="container jumotron" style="width: 80vw;">
+                    <h1>Produk anda belum ada!</h1>
+                    <h4>Tambahkan produk anda sekarang!</h4>
+                  </div>
+
+                </center>
+              <?php endif ?>
+
+              
+                
             </div>
 
-
+            <?= $page->links() ;?>
           </div>
         </div>
       </div>

@@ -49,6 +49,8 @@ class TokoAuth extends BaseController
             'slug' => url_title($data['name'], '-', true),
             'email' => $data['email'],
             'password' => password_hash($data['password'], PASSWORD_DEFAULT),
+            // NEXT UPGRADE
+            'id_lokasi' => 1,
             "verified" => 0
         ];
 
@@ -60,7 +62,7 @@ class TokoAuth extends BaseController
         // save() ini untuk insert/update
         // save() akan update jika kolom yang primarykey disisipi nilai oleh kita
         // sedangkan save() akan menyimpan data baru ketika kolom yang primary key tidak di sisipi nilai alias NULL
-  
+
         if ($insert == 0) {
             $confirmCode = $this->makeConfirmationCode($uuid4->toString());
             if (!$confirmCode) {
@@ -88,6 +90,19 @@ class TokoAuth extends BaseController
         $res = $this->authModel->first();
 
         return ($res !== null);
+    }
+
+
+    function resendEmailConfirm($idToko)
+    {
+        $remake = $this->makeConfirmationCode($idToko);
+        if (!$remake) {
+            session()->setFlashdata('error', 'Konfirmasi Email Gagal, silahkan coba lagi');
+            return redirect()->to(base_url('/toko/auth/resend-email'));
+        }
+
+        session()->setFlashdata('success ', 'Berhasil! Anda boleh masuk ke tahap selanjutnya');
+        return redirect()->to(base_url('/toko/auth/login'))->withInput();
     }
 
     function makeConfirmationCode($idToko)
@@ -120,8 +135,15 @@ class TokoAuth extends BaseController
         $data = $this->request->getVar();
 
         $dataToko = $this->authModel->findToko($data['email']);
+        if ($dataToko != null) {
+            // cek apakah akun dari toko ini sudah konfirmasi email?
+            if ($dataToko['verified'] == 0) {
+                session()->setFlashdata('error', 'Sepertinya anda belum mengkonfirmasi email, silahkan cek email anda');
+                return redirect()->to(base_url('/toko/auth/login'))->withInput();
+            }
 
-        if (count($dataToko) > 0) {
+            $this->deleteExpiredToken($dataToko['id_toko']);
+
             // pengecekan password dari form input dengan password dari table admin
             $authenticatePassword = password_verify($data['password'], $dataToko['password']);
             if ($authenticatePassword) {
@@ -141,11 +163,11 @@ class TokoAuth extends BaseController
 
                 return redirect()->to(base_url('/toko/home'));
             } else {
-                session()->setFlashdata('error', 'Password tidak sesuai!');
+                session()->setFlashdata('error', 'Password terdaftar dalam sistem kami, silakan daftarkan diri anda!');
                 return redirect()->to(base_url('/toko/auth/login'))->withInput();
             }
         } else {
-            session()->setFlashdata('error', 'Email tidak sesuai!');
+            session()->setFlashdata('error', 'Email terdaftar dalam sistem kami, silakan daftarkan diri anda!');
             return redirect()->to(base_url('/toko/auth/login'))->withInput();
         }
     }
@@ -163,10 +185,6 @@ class TokoAuth extends BaseController
         $this->emailConfirm->select();
         $res = $this->emailConfirm->first();
 
-
-        
-
-
         $data = $this->authModel->find($res['id_toko']);
 
 
@@ -176,22 +194,32 @@ class TokoAuth extends BaseController
         ];
 
         if ($res) {
-
             // gagal, jika kode konfirmasi sudah kadaluarsa
             if (strtotime($res['expired_at']) < strtotime($currentDateTime)) {
-                $this->emailConfirm->delete();
+                $this->emailConfirm->where('code', $code)->delete();
                 session()->setFlashdata('error', 'Link Konfirmasi Email Telah Kadaluarsa, silahkan kirim kembali link konfirmasi email anda');
                 return view('frontend/pages/toko/auth/email_confirmation_status');
             }
 
             $this->authModel->update($res['id_toko'], ["verified" => 1]);
-            $this->emailConfirm->delete();
+
+            $this->emailConfirm->where('code', $code)->delete();
             session()->set($sessionData);
             session()->setFlashdata('success', 'Link Konfirmasi Email Berhasil, anda boleh masuk ke tahap berikutnya');
             return view('frontend/pages/toko/auth/email_confirmation_status');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Link konfirmasi sudah tidak valid');
             return view('frontend/pages/toko/auth/email_confirmation_status');
         }
+    }
+
+
+    function deleteExpiredToken($idToko)
+    {
+        $where = [
+            'expired_at < NOW()',
+            'id_toko' => $idToko,
+        ];
+        $this->emailConfirm->where($where)->delete();
     }
 }

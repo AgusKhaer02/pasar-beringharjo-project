@@ -14,6 +14,7 @@ $(preloader);
 
 (function ($) {
 	'use strict';
+
 	// tab
 	$('.tab-content').find('.tab-pane').each(function (idx, item) {
 		var navTabs = $(this).closest('.code-tabs').find('.nav-tabs'),

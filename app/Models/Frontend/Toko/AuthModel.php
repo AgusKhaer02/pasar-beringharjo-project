@@ -13,10 +13,9 @@ class AuthModel extends Model
     protected $primaryKey = 'id_toko';
     
     // tabel-tabel yang diizinkan
-    protected $allowedFields = ['id_toko','name','slug','email','password','verified'];
+    protected $allowedFields = ['id_toko','name','slug','email','password','verified','id_lokasi'];
 
-    public function findToko(string $email = null, string $password = null) : array{
-    
+    public function findToko(string $email = null, string $password = null) {
         $where = [];
         if ($email != null) { 
             $where['email'] = $email;

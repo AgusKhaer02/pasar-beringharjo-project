@@ -42,7 +42,7 @@ abstract class BaseController extends Controller
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
     // protected $session;
-
+    protected $bingMapsAPIKey;
     /**
      * @return void
      */
@@ -53,6 +53,8 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         helper("Utils");
+
+        $this->bingMapsAPIKey = 'AjW6-dZZoaykuiVK9bgOrU5QLbDs9npiO77bQ6LRQEJvyfcULC7wT77-ByTsmiwv';
         // E.g.: $this->session = \Config\Services::session();
     }
 }

@@ -18,7 +18,11 @@ class Home extends BaseController
 
     public function index()
     {
-        $produk = $this->produkModel
+
+        $all = (bool) $this->request->getGet('all') ?? "false";
+
+
+        $qProduk = $this->produkModel
             ->select('produk.id, 
               (SELECT img FROM img_produk WHERE id_produk = produk.id LIMIT 1) as img_produk,
               produk.nama, 
@@ -26,13 +30,23 @@ class Home extends BaseController
               produk.harga, 
               produk.stok, 
               produk.slug')
-            ->where('produk.id_toko', session('id_toko'))
-            ->findAll();
+            ->where('produk.id_toko', session('id_toko'));
+        $perpage = 6;
+
+        $produk = ($all) ? $qProduk->findAll() : $qProduk->paginate($perpage);
+        $pager = $this->produkModel->pager;
+        $countProduk = $qProduk->countAllResults();
+        $tokoDetails = $this->tokoModel->find(session('id_toko'));
 
         $data = [
             "produk" => $produk,
-            "toko" => $this->tokoModel->find(session('id_toko')),
+            "produkCount" => $countProduk,
+            "toko" => $tokoDetails,
         ];
+
+        if (!$all) {
+            $data['page']  = $pager;
+        }
         return view('frontend/pages/toko/home/home', $data);
     }
 }
