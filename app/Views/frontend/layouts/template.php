@@ -50,7 +50,12 @@
 
 <body>
 
-    <?= $this->include('frontend/layouts/header'); ?>
+    <?php 
+    $currentUri = service('uri');
+    $segments = $currentUri->getSegments();
+    ?>
+
+    <?= (!empty($segments) && strtolower($segments[0]) === 'denah')  ? '' :  $this->include('frontend/layouts/header') ?>
 
     <main>
         <section class="section">

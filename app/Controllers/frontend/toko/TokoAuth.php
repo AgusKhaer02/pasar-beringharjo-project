@@ -167,7 +167,7 @@ class TokoAuth extends BaseController
                 return redirect()->to(base_url('/toko/auth/login'))->withInput();
             }
         } else {
-            session()->setFlashdata('error', 'Email terdaftar dalam sistem kami, silakan daftarkan diri anda!');
+            session()->setFlashdata('error', 'Email tidak terdaftar dalam sistem kami, silakan daftarkan diri anda!');
             return redirect()->to(base_url('/toko/auth/login'))->withInput();
         }
     }

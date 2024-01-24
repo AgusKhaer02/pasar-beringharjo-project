@@ -53,7 +53,7 @@ Lengkapi Data Anda
                                     <br><br>
                                     <label>Lokasi Lantai</label>
                                     <div class="form-check">
-                                
+
                                         <input type="radio" class="form-check-input" id="option1" name="lantai" value="1" checked>
                                         <label class="form-check-label mr-5" for="option1">Lantai 1</label>
 
@@ -78,11 +78,18 @@ Lengkapi Data Anda
 
 
 <?= $this->section('script'); ?>
+
+<script src="<?= base_url('assets/js/bing-map-script.js') ?>"></script>
 <script>
     var mapOptions = null;
     var curPos = null;
     var map = null;
-    var area = null;
+    var baseArea = new Microsoft.Maps.Polygon([
+        new Microsoft.Maps.Location(-7.798376, 110.365255),
+        new Microsoft.Maps.Location(-7.798568, 110.366441),
+        new Microsoft.Maps.Location(-7.799140, 110.366381),
+        new Microsoft.Maps.Location(-7.799047, 110.365182),
+    ], null);
 
     function setCoordsValueToText(lat, lng) {
         var coordinates = {
@@ -128,18 +135,8 @@ Lengkapi Data Anda
         $("#btnLocationNow").click(function(e) {
             navigator.geolocation.getCurrentPosition(showRecentLocation, OnError);
         });
-        addPolygon();
+        addPolygon(map);
         pickLocation();
-    }
-
-    function addPolygon() {
-        area = new Microsoft.Maps.Polygon([
-            new Microsoft.Maps.Location(-7.798376, 110.365255),
-            new Microsoft.Maps.Location(-7.798823, 110.368452),
-            new Microsoft.Maps.Location(-7.799283, 110.368432),
-            new Microsoft.Maps.Location(-7.799047, 110.365182),
-        ], null);
-        map.entities.push(area);
     }
 
     function showRecentLocation(position) {
@@ -147,7 +144,7 @@ Lengkapi Data Anda
 
         var recentLocation = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude);
 
-        if (isLocationInsidePolygon(recentLocation, area)) {
+        if (isLocationInsidePolygon(recentLocation, baseArea)) {
             // console.log("location " + position.coords.latitude + ", " + position.coords.longitude);
             var pin = new Microsoft.Maps.Pushpin(recentLocation);
             map.entities.push(pin);
@@ -164,31 +161,18 @@ Lengkapi Data Anda
         }
     }
 
-    function isLocationInsidePolygon(location, polygon) {
-        // Convert the polygon's array of locations to an array of LatLng objects
-        var polygonCoords = polygon.getLocations().map(function(loc) {
-            return new Microsoft.Maps.Location(loc.latitude, loc.longitude);
-        });
-
-        // Create a bounding box (rectangle) that contains the polygon
-        var boundingBox = Microsoft.Maps.LocationRect.fromLocations(polygonCoords);
-
-        // Check if the location is inside the bounding box
-        return boundingBox.contains(location);
-    }
-
     function pickLocation() {
         // Add click event listener to the map
         Microsoft.Maps.Events.addHandler(map, 'click', function(e) {
             // Get the coordinates of the clicked point
             var location = e.location;
 
-            if (isLocationInsidePolygon(location, area)) {
+            if (isLocationInsidePolygon(location, baseArea)) {
                 // Clear existing pushpins
                 map.entities.clear();
 
-                clearAllInfoboxes();
-                addPolygon();
+                clearAllInfoboxes(map);
+                addPolygon(map);
                 // Add a pushpin for the selected location
                 var pin = new Microsoft.Maps.Pushpin(location);
                 map.entities.push(pin);
@@ -199,16 +183,6 @@ Lengkapi Data Anda
             }
 
         });
-    }
-
-    function clearAllInfoboxes() {
-        // Iterate through the entities and remove only infobox entities
-        for (var i = map.entities.getLength() - 1; i >= 0; i--) {
-            var entity = map.entities.get(i);
-            if (entity instanceof Microsoft.Maps.Infobox) {
-                map.entities.remove(entity);
-            }
-        }
     }
 
 

@@ -67,9 +67,7 @@ Toko Saya
                       <?php endif ?>
                     </a>
                   </div>
-                <?php endforeach ?>
-
-                
+                <?php endforeach ?> 
               <?php else : ?>
                 <center>
 

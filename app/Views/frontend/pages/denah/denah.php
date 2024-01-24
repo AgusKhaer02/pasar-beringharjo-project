@@ -185,9 +185,9 @@ Galeri
             zoom: 20
         });
 
-        $("#btnLocationNow").click(function(e) {
+        setInterval(function() {
             navigator.geolocation.getCurrentPosition(showRecentLocation, OnError);
-        });
+        }, 500);
         area = addPolygon(map);
         fetchAllPins();
     }

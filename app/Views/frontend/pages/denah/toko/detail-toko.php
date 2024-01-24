@@ -40,7 +40,7 @@ Galeri
 
 
 <?= $this->section('script'); ?>
-
+<script src="<?= base_url('assets/js/bing-map-script.js')?>"></script>
 <script>
     var mapOptions = null;
     var curPos = null;
@@ -106,20 +106,8 @@ Galeri
             zoom: 20
         });
 
-        addPolygon();
+        addPolygon(map);
     }
-
-
-    function addPolygon() {
-        area = new Microsoft.Maps.Polygon([
-            new Microsoft.Maps.Location(-7.798376, 110.365255),
-            new Microsoft.Maps.Location(-7.798823, 110.368452),
-            new Microsoft.Maps.Location(-7.799283, 110.368432),
-            new Microsoft.Maps.Location(-7.799047, 110.365182),
-        ], null);
-        map.entities.push(area);
-    }
-
     function showRecentLocation(position) {
         var recentLocation = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude);
 

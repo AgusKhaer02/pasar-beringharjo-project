@@ -11,9 +11,6 @@
             <!-- <form action="#!" class="search order-lg-3 order-md-2 order-3 ml-auto">
                 <input id="search-query" name="s" type="search" placeholder="Search..." autocomplete="off">
             </form> -->
-
-            <a href="<?= base_url('/toko/auth/login') ?>" class="btn btn-outline-success order-lg-3 order-md-2 order-3">Toko Saya</a>
-            
             <div class="collapse navbar-collapse text-center order-lg-2 order-4" id="navigation">
                 <ul class="navbar-nav mx-auto mt-3 mt-lg-0">
                     <li class="nav-item"> <a class="nav-link" href="<?= base_url('/') ?>">Home</a>

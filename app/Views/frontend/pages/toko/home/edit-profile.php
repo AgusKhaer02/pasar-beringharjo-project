@@ -31,13 +31,25 @@ Ubah Profil Toko
     /* Green background when checked */
   }
 
-  #drop-container {
+  #sampul-container {
     border: 2px dashed #ccc;
     padding: 20px;
     text-align: center;
   }
 
-  #image-preview {
+  #sampul-preview {
+    max-width: 100%;
+    max-height: 300px;
+    margin-top: 10px;
+  }
+
+  #profil-container {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+  }
+
+  #profil-preview {
     max-width: 100%;
     max-height: 300px;
     margin-top: 10px;
@@ -68,7 +80,11 @@ Ubah Profil Toko
                       </button>
                     </div>
                     <div class="modal-body">
-
+                      <div id="sampul-container">
+                        <p>Tarik dan lepaskan file anda, atau klik "Choose File"</p>
+                        <input type="file" id="sampul-input" style="width:40%; background:#DDD;" accept="image/*"> <br>
+                        <img id="sampul-preview" alt="Preview">
+                      </div>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-primary" data-dismiss="modal">Selesai</button>
@@ -93,10 +109,10 @@ Ubah Profil Toko
                         </button>
                       </div>
                       <div class="modal-body">
-                        <div id="drop-container">
-                          <p>Drag and drop an image or click to choose a file</p>
-                          <input type="file" id="file-input" style="width:40%; background:#DDD;" accept="image/*"> <br>
-                          <img id="image-preview" alt="Preview">
+                        <div id="profil-container">
+                          <p>Tarik dan lepaskan file anda, atau klik "Choose File"</p>
+                          <input type="file" id="profil-input" style="width:40%; background:#DDD;" accept="image/*"> <br>
+                          <img id="profil-preview" alt="Preview">
                         </div>
                       </div>
                       <div class="modal-footer">
@@ -187,12 +203,12 @@ Ubah Profil Toko
 
 <?= $this->section('script'); ?>
 <script src="<?= base_url('assets/js/bing-map-script.js') ?>"></script>
+
 <script>
   var mapOptions = null;
   var curPos = null;
   var map = null;
   var area = null;
-
 
   function setCoordsValueToText(lat, lng) {
     var coordinates = {
@@ -209,13 +225,16 @@ Ubah Profil Toko
       callback: initializeMap()
     });
 
-    dropContainer();
+    // input sampul
+    dropContainer("#sampul-container", "#sampul-input", "#sampul-preview");
+    // input foto profile
+    dropContainer("#profil-container", "#profil-input", "#profil-preview");
   });
 
-  function dropContainer() {
-    const $dropContainer = $("#drop-container");
-    const $fileInput = $("#file-input");
-    const $imagePreview = $("#image-preview");
+  function dropContainer(dropContainer, fileInput, imgPreview) {
+    const $dropContainer = $(dropContainer);
+    const $fileInput = $(fileInput);
+    const $imagePreview = $(imgPreview);
 
     $dropContainer.on("dragover", (e) => {
       e.preventDefault();
@@ -258,22 +277,6 @@ Ubah Profil Toko
     }
   }
 
-  function inputFile() {
-    $('#file-input').change(function(event) {
-      const fileInput = event.target;
-      const file = fileInput.files[0];
-
-      if (file) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-          $('#image-preview').html(`<img src="${e.target.result}" alt="Preview">`);
-        };
-
-        reader.readAsDataURL(file);
-      }
-    });
-  }
 
   function initializeMap() {
     curPos = new Microsoft.Maps.Location(-7.798661, 110.365318);
@@ -327,18 +330,7 @@ Ubah Profil Toko
     }
   }
 
-  function isLocationInsidePolygon(location, polygon) {
-    // Convert the polygon's array of locations to an array of LatLng objects
-    var polygonCoords = polygon.getLocations().map(function(loc) {
-      return new Microsoft.Maps.Location(loc.latitude, loc.longitude);
-    });
 
-    // Create a bounding box (rectangle) that contains the polygon
-    var boundingBox = Microsoft.Maps.LocationRect.fromLocations(polygonCoords);
-
-    // Check if the location is inside the bounding box
-    return boundingBox.contains(location);
-  }
 
   function pickLocation() {
     // Add click event listener to the map
@@ -350,7 +342,7 @@ Ubah Profil Toko
         // Clear existing pushpins
         map.entities.clear();
 
-        clearAllInfoboxes();
+        clearAllInfoboxes(map);
         addPolygon(map);
         // Add a pushpin for the selected location
         var pin = new Microsoft.Maps.Pushpin(location);
@@ -362,16 +354,6 @@ Ubah Profil Toko
       }
 
     });
-  }
-
-  function clearAllInfoboxes() {
-    // Iterate through the entities and remove only infobox entities
-    for (var i = map.entities.getLength() - 1; i >= 0; i--) {
-      var entity = map.entities.get(i);
-      if (entity instanceof Microsoft.Maps.Infobox) {
-        map.entities.remove(entity);
-      }
-    }
   }
 
 
